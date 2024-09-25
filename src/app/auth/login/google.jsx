@@ -41,10 +41,10 @@ export default function GoogleLoginComponent() {
   return (
     <>
       <div
-        class="flex-1 text-center bg-white/30 py-3 rounded-lg text-white hover:bg-white/50 cursor-pointer"
+        className="flex-1 text-center bg-white/30 py-3 rounded-lg text-white hover:bg-white/50 cursor-pointer"
         onClick={login}
       >
-        <i class="fab fa-google mr-2"></i>Google
+        <i className="fab fa-google mr-2"></i>Google
       </div>
     </>
   );
