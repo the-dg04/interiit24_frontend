@@ -4,7 +4,6 @@ export default function useOTP() {
   const [otp, setOtp] = useState(Array(4).fill("")); // Array with 6 empty strings
   // const [currentIndex,setCurrentIndex]=useState(0);
   const inputRefs = useRef([]); // Array of refs for each input field
-
   const handleKeyDown = (e) => {
     if (
       !/^[0-9]{1}$/.test(e.key) &&

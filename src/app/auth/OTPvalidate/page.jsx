@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
-import useOTP from "./useOTP"
+import { useRef, useState } from "react";
+import useOTP from "./useOTP";
 export default function Page() {
-  const [otp,otpComponent]=useOTP();
+  const [otp, otpComponent] = useOTP();
   const [otpWarning, setOtpWarning] = useState(false);
   return (
     <>
@@ -29,10 +29,7 @@ export default function Page() {
             Validate
           </button>
           <div className="flex space-x-6 mt-4"></div>
-          <a
-            href=""
-            className="flex justify-center text-white underline mt-2"
-          >
+          <a href="" className="flex justify-center text-white underline mt-2">
             Resend OTP
           </a>
         </div>
