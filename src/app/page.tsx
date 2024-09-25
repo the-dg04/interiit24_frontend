@@ -1,6 +1,6 @@
 // 'use client'
 import GoogleLoginFunction from "./auth/login/google";
-import GitHubLoginFunction from "./auth/github";
+import GitHubLoginFunction from "./auth/login/github";
 import { CookiesProvider } from "next-client-cookies/server";
 
 export default function Home() {
