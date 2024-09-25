@@ -23,7 +23,7 @@ export default function Page() {
               username already exists
             </div>
           )}
-          <button class="w-full mt-8 bg-white text-[#080710] py-3 rounded font-semibold text-lg hover:bg-gray-100">
+          <button className="w-full mt-8 bg-white text-[#080710] py-3 rounded font-semibold text-lg hover:bg-gray-100">
             Continue &gt;
           </button>
           <div className="flex space-x-6 mt-4"></div>

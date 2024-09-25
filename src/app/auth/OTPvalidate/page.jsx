@@ -64,7 +64,7 @@ export default function Page() {
           <h3 className="text-center text-white text-2xl font-medium">2FA</h3>
           {otpComponent}
           <button
-            class="w-full mt-8 bg-white text-[#080710] py-3 rounded font-semibold text-lg hover:bg-gray-100"
+            clasNames="w-full mt-8 bg-white text-[#080710] py-3 rounded font-semibold text-lg hover:bg-gray-100"
             onClick={handleOtpValidation}
             ref={validateRef}
           >
