@@ -2,7 +2,11 @@
 import useField from "./useField";
 import GoogleLoginComponent from "./google";
 import { useRef, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { useCookies } from "next-client-cookies";
 export default function Page() {
+  const router=useRouter()
+  const cookies=useCookies()
   const handlePasswordLogin = async () => {
     LoginRef.current.disabled=true
     LoginRef.current.style.backgroundColor="gray"
@@ -22,6 +26,9 @@ export default function Page() {
         setUserDoesNotExistWarning(false)
         const resJSON=await res.json()
         console.log(resJSON);
+        cookies.set("temp_token",resJSON["temp_token"])
+        cookies.set("expires_at",resJSON["expires_at"])
+        router.push("/auth/OTPvalidate?type=login")
       }
       LoginRef.current.style.backgroundColor="white"
     LoginRef.current.disabled=false
