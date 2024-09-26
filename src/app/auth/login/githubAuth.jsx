@@ -2,10 +2,15 @@
 import { useEffect, useState } from "react";
 
 function GithubAuth() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const urlParams = new URLSearchParams(window.location.search);
-  const [code, setCode] = useState(urlParams.get("code"));
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
+	let urlParams;
+	if (typeof window !== 'undefined') {
+	  urlParams = new URLSearchParams(window.location.search);
+	} else {
+	  urlParams = new URLSearchParams();
+	}
+	const [code, setCode] = useState(urlParams.get("code"));
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
