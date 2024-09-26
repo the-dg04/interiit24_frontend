@@ -4,7 +4,7 @@ import GoogleLoginComponent from "./google";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import GitHubLoginButton from "./github";
+import GithubAuth from "./githubAuth";
 
 export default function Page() {
   const router=useRouter()
@@ -73,7 +73,7 @@ export default function Page() {
           )}
           <div className="flex space-x-6 mt-8">
             <GoogleLoginComponent />
-            <GitHubLoginButton />
+            <GithubAuth/>
           </div>
           <a
             href="/auth/signup"
