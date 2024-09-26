@@ -3,6 +3,8 @@ import { useRef, useState } from "react";
 import useOTP from "./useOTP";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCookies } from "next-client-cookies";
+import useField from "../recover/useField";
+import AuthBackgroundWrapper from "./../../components/ui/AuthBackgroundWrapper";
 export default function Page() {
   const [otp, otpComponent] = useOTP();
   const [otpWarning, setOtpWarning] = useState(false);
@@ -10,43 +12,49 @@ export default function Page() {
   const router = useRouter();
   const cookies = useCookies();
   const otp_type = useSearchParams().get("type");
+  const [newPassword, newPasswordComponent] = useField({
+    title: "New Password",
+    placeholder: "password",
+  });
   const handleOtpValidation = async () => {
     validateRef.current.disabled = true;
     validateRef.current.style.backgroundColor = "gray";
     // console.log(otp.join(""),otp_type);
+    var bodyObject = {
+      temp_token: cookies.get("temp_token"),
+      otp: otp.join(""),
+    };
+    if (otp_type == "recovery") {
+      bodyObject["new_password"] = newPassword;
+    }
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/validateOTP`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/${
+        otp_type == "login" ? "validateOTP" : "user/recoverPassword"
+      }`,
       {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({
-          temp_token: cookies.get("temp_token"),
-          otp: otp.join(""),
-          otp_type: otp_type,
-        }),
+        body: JSON.stringify(bodyObject),
       }
     ).catch((err) => {
       console.log(err);
     });
     if (res.status != 200) {
       // setUserDoesNotExistWarning(true);
-      setOtpWarning(true)
+      setOtpWarning(true);
       const resJSON = await res.json();
       console.log(resJSON);
     } else {
       // setUserDoesNotExistWarning(false);
-      setOtpWarning(false)
+      setOtpWarning(false);
       const resJSON = await res.json();
       console.log(resJSON);
-      cookies.remove("temp_token")
-      cookies.remove("expires_at")
-      cookies.set("token",resJSON["token"])
-      router.push("/")
-      // cookies.set("temp_token", resJSON["temp_token"]);
-      // cookies.set("expires_at", resJSON["expires_at"]);
-      // router.push("/auth/OTPvalidate");
+      cookies.remove("temp_token");
+      cookies.remove("expires_at");
+      if (otp_type == "login") cookies.set("token", resJSON["token"]);
+      router.push("/");
     }
     validateRef.current.style.backgroundColor = "white";
     validateRef.current.disabled = false;
@@ -54,17 +62,13 @@ export default function Page() {
 
   return (
     <>
-      <div className="wrapper bg-[#080710] h-screen flex items-center justify-center">
-        <div className="absolute w-[430px] h-[520px]">
-          <div className="absolute w-[200px] h-[200px] bg-gradient-to-r from-[#1845ad] to-[#23a2f6] rounded-full top-[-80px] left-[-80px]"></div>
-          <div className="absolute w-[200px] h-[200px] bg-gradient-to-r from-[#ff512f] to-[#f09819] rounded-full bottom-[-80px] right-[-30px]"></div>
-        </div>
-
+      <AuthBackgroundWrapper>
         <div className="relative bg-white/10 backdrop-blur-md border border-white/10 shadow-[0_0_40px_rgba(8,7,16,0.6)] rounded-lg p-10 w-[400px]">
           <h3 className="text-center text-white text-2xl font-medium">2FA</h3>
           {otpComponent}
+          {otp_type == "recovery" && newPasswordComponent}
           <button
-            clasNames="w-full mt-8 bg-white text-[#080710] py-3 rounded font-semibold text-lg hover:bg-gray-100"
+            className="w-full mt-8 bg-white text-[#080710] py-3 rounded font-semibold text-lg hover:bg-gray-100"
             onClick={handleOtpValidation}
             ref={validateRef}
           >
@@ -80,7 +84,7 @@ export default function Page() {
             Resend OTP
           </a>
         </div>
-      </div>
+      </AuthBackgroundWrapper>
     </>
   );
 }

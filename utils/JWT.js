@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const signupKey=process.env.NEXT_PUBLIC_SIGNUP_SECRET;
+const signupKey = process.env.NEXT_PUBLIC_USERNAME_SECRET;
 
 export const encodeUsername = (username) => {
   const token = jwt.sign(username, signupKey);
@@ -8,6 +8,7 @@ export const encodeUsername = (username) => {
 };
 
 export const decodeUsername = (token) => {
+  if (!token) return "";
   const username = jwt.verify(token, signupKey);
   return username;
 };
