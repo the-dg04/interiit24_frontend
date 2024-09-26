@@ -42,7 +42,7 @@ export default function Page() {
       console.log(resJSON);
       cookies.remove("temp_token")
       cookies.remove("expires_at")
-      cookies.set("token",resJSON[token])
+      cookies.set("token",resJSON["token"])
       router.push("/")
       // cookies.set("temp_token", resJSON["temp_token"]);
       // cookies.set("expires_at", resJSON["expires_at"]);
