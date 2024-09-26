@@ -1,6 +1,6 @@
 // 'use client'
 import GoogleLoginFunction from "./auth/login/google";
-import GitHubLoginFunction from "./auth/login/github";
+import GithubAuth from "./auth/login/githubAuth";
 import { CookiesProvider } from "next-client-cookies/server";
 import Link from "next/link";
 
@@ -11,7 +11,7 @@ export default function Home() {
         <Link href="/history" className="bg-gray-500 p-2 rounded-md">History</Link>
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
           <GoogleLoginFunction />
-          <GitHubLoginFunction />
+          <GithubAuth />
         </main>
       </div>
     </CookiesProvider>
