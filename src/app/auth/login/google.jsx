@@ -1,49 +1,91 @@
-"use client"
-import {
-  useGoogleLogin,
-} from "@react-oauth/google";
+"use client";
+import { useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useCookies } from "next-client-cookies";
 import { useRouter } from "next/navigation";
+import { encodeGmail, getUserEmail } from "@/../utils/OAuth";
+import { useState } from "react";
 
-export default function GoogleLoginComponent() {
+export default function useGoogle(use_type) {
   const cookies = useCookies();
   const router = useRouter();
-  const handleLogin = async (user) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: user.email }),
-    }).then((res) => res.json());
-    console.log(res);
-    if (res.newUser) {
-      router.push(`/register?authToken=${res.authToken}`);
+  const [gmail, setGmail] = useState(null);
+  const [currentState, setCurrentState] = useState("idle"); // possible states : idle | processing | error
+
+  const handleLogin = async (email) => {
+    const token = encodeGmail(email);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "login-method": "gmail",
+        },
+        body: JSON.stringify({ token: token }),
+      }
+    ).catch((err) => {
+      console.log(err);
+    });
+    const resJSON = await res.json();
+    if (res.status == 200) {
+      cookies.set("temp_token", resJSON["temp_token"]);
+      cookies.set("expires_at", resJSON["expires_at"]);
+      router.push("/auth/OTPvalidate?type=login");
     } else {
-      cookies.set("authToken", res.authToken);
-      router.push("/dashboard");
+      setCurrentState("error");
+    }
+  };
+
+  const handleSignup = async (email) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/checkGmail`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ gmail: email }),
+      }
+    ).catch((err) => {
+      console.log(err);
+    });
+    const resJSON = await res.json();
+    if (resJSON.userExists) {
+      setCurrentState("error");
+    } else {
+      setGmail(email);
+      setCurrentState("idle");
     }
   };
   const login = useGoogleLogin({
-    onSuccess: (credentialResponse) => {
-      const decode = jwtDecode(credentialResponse.credential);
-      const user = {
-        email: decode.email,
-      };
-      return redirect("/ui/login")
-      handleLogin(user);
+    onSuccess: async (credentialResponse) => {
+      setCurrentState("processing");
+      const res = await getUserEmail(credentialResponse.access_token);
+      console.log(res);
+      if (use_type == "login") {
+        await handleLogin(res);
+      } else if (use_type == "signup") {
+        await handleSignup(res);
+      }else{
+        setCurrentState("idle")
+        setGmail(res)
+      }
     },
-    ux_mode:"redirect",
-    redirect_uri:"/"
+    ux_mode: "redirect",
+    redirect_uri: "/",
   });
 
-  return (
+  const component = (
     <>
       <div
         className="flex-1 text-center bg-white/30 py-3 rounded-lg text-white hover:bg-white/50 cursor-pointer p-2"
         onClick={login}
       >
-        <i className="fab fa-google mr-2"></i>Google
+        <i className="fab fa-google mr-2"></i>
+        {gmail ||(use_type=="signup"?"Link ":"")+"Google"}
       </div>
     </>
   );
+  return [gmail, currentState, component];
 }

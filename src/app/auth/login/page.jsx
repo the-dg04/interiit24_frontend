@@ -1,7 +1,7 @@
 "use client";
 import useField from "./useField";
-import GoogleLoginComponent from "./google";
-import { useRef, useState } from "react";
+import useGoogle from "./google";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import GithubAuth from "./githubAuth";
@@ -10,6 +10,22 @@ import AuthBackgroundWrapper from "./../../components/ui/AuthBackgroundWrapper";
 export default function Page() {
   const router = useRouter();
   const cookies = useCookies();
+  const [gmail,googleComponentState,googleComponent]=useGoogle("login")
+  useEffect(()=>{
+    if(googleComponentState=="idle"){
+      LoginRef.current.style.backgroundColor = "white";
+      LoginRef.current.disabled = false;
+      setUserDoesNotExistWarning(false)
+    }else if(googleComponentState=="processing"){
+      LoginRef.current.style.backgroundColor = "gray";
+      LoginRef.current.disabled = true;
+      setUserDoesNotExistWarning(false)
+    }else if(googleComponentState=="error"){
+      LoginRef.current.style.backgroundColor = "white";
+      LoginRef.current.disabled = false;
+      setUserDoesNotExistWarning(true)
+    }
+  },[googleComponentState])
   const handlePasswordLogin = async () => {
     LoginRef.current.disabled = true;
     LoginRef.current.style.backgroundColor = "gray";
@@ -74,7 +90,7 @@ export default function Page() {
             </div>
           )}
           <div className="flex space-x-6 mt-8">
-            <GoogleLoginComponent />
+            {googleComponent}
             <GithubAuth />
           </div>
           <a
