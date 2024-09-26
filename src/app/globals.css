@@ -3,13 +3,22 @@
 @tailwind utilities;
 
 :root {
+<<<<<<< HEAD
+  --background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); /* Cool light gradient */
+  --foreground: #171717;
+=======
   --background: #ffffff;
   --foreground: #000000;
+>>>>>>> 5c6e9725f95ac8fba049aaea6d9a42533f5c0f83
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+<<<<<<< HEAD
+    --background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Cool dark gradient */
+=======
     --background: #000000;
+>>>>>>> 5c6e9725f95ac8fba049aaea6d9a42533f5c0f83
     --foreground: #ededed;
   }
 }
@@ -18,10 +27,23 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  background-size: 400% 400%; /* Animate the gradient background */
+  animation: gradientAnimation 15s ease infinite;
+}
+
+/* Animation for moving background */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+.custom-background {
+  background-color: #f0f0f0; /* Change this to your desired color */
+  min-height: 100vh; /* Ensure it covers the full viewport height */
 }
