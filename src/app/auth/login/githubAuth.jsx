@@ -5,12 +5,12 @@ function GithubAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get("code");
+  const [code, setCode] = useState(urlParams.get("code"));
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const authCode = urlParams.get("code");
-    setCode(authCode); // Set code state
+    setCode(authCode);
 
     if (authCode && !localStorage.getItem("token")) {
       authenticateWithGithub(authCode);
