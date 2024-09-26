@@ -1,0 +1,139 @@
+.company-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    width: 100%; 
+    max-width: 1200px; 
+    margin: 0 auto;
+    padding: 40px; 
+    background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .search-form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    width: 100%; 
+  }
+  
+  .input-field {
+    flex: 1;
+    margin-right: 10px;
+    padding: 10px; 
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .search-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .search-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Company list */
+  .company-list-container {
+    width: 100%; /* Full width for the list */
+    margin-bottom: 40px; /* Increased margin for better spacing */
+  }
+  
+  .company-list-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px; 
+    color: #4A4A4A;
+  }
+  
+  .company-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .company-item {
+    padding: 15px; /* Increased padding for the item */
+    margin-bottom: 10px; /* Increased margin for spacing */
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: #333; /* Soft dark color for text */
+  }
+  
+  .company-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Card and chart styling */
+  .company-card {
+    width: 100%; /* Full width for the card */
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px; /* Added margin for spacing */
+    color: #444; /* Softer dark color for card text */
+  }
+  
+  .computation-alert {
+    margin-bottom: 20px;
+    color: #e57f7f; /* Soft red color for alerts */
+  }
+  
+  .metrics-container {
+    margin-top: 20px;
+  }
+  
+  .chart-container {
+    margin-bottom: 40px;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    color: #2C3E50; /* Deep blue for headers */
+    margin-bottom: 15px; /* Added margin for separation */
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    color: #34495E; /* Softer blue for subheaders */
+    margin-bottom: 10px; /* Added margin for separation */
+  }
+  
+  /* Custom background class */
+  .custom-background {
+    background-color: #f0f0f0; /* Change this to your desired color */
+    min-height: 100vh; /* Ensure it covers the full viewport height */
+  }
+  
+  /* Responsive styling for smaller screens */
+  @media (max-width: 768px) {
+    .company-container {
+      padding: 20px; /* Reduced padding on smaller screens */
+    }
+  
+    .search-form {
+      flex-direction: column; /* Stack input and button vertically */
+    }
+  
+    .input-field {
+      margin-right: 0;
+      margin-bottom: 10px; /* Space between input and button */
+      width: 100%; /* Full width on small screens */
+    }
+  }
+  
