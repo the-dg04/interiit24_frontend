@@ -27,6 +27,6 @@
       ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/history/[company]/page.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/history/[company]/page.tsx", "src/app/page.jsx"],
   "exclude": ["node_modules"]
 }

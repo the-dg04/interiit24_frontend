@@ -1,10 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import useField from "./useField";
-import useGoogle from "../login/google";
+import useGoogle from "../_authMethods/google";
 import { decodeUsername } from "@/../utils/JWT";
 import { useRouter, useSearchParams } from "next/navigation";
-import AuthBackgroundWrapper from "./../../components/ui/AuthBackgroundWrapper";
 import { encodeGmail } from "../../../../utils/OAuth";
 import { useCookies } from "next-client-cookies";
 export default function Page() {
@@ -25,7 +24,7 @@ export default function Page() {
   });
   const createAccount = async () => {
     createAccountRef.current.disabled = true;
-    createAccountRef.current.backgroundColor = "gray";
+    createAccountRef.current.style.backgroundColor = "gray";
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/create`,
       {
@@ -51,12 +50,11 @@ export default function Page() {
     } else {
       console.log(resJSON.message);
       createAccountRef.current.disabled = false;
-      createAccountRef.current.backgroundColor = "white";
+      createAccountRef.current.style.backgroundColor = "white";
     }
   };
   return (
     <>
-      <AuthBackgroundWrapper>
         <div className="relative bg-white/10 backdrop-blur-md border border-white/10 shadow-[0_0_40px_rgba(8,7,16,0.6)] rounded-lg p-10 w-[400px]">
           <h3 className="text-center text-white text-2xl font-medium">
             Signup
@@ -92,7 +90,6 @@ export default function Page() {
             Create account
           </button>
         </div>
-      </AuthBackgroundWrapper>
     </>
   );
 }
