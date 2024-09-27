@@ -11,13 +11,15 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { Card, CardHeader, CardContent } from '../../components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert';
+import { Card, CardHeader, CardContent } from '../../components/ui/card.jsx';
+import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert.jsx';
 import Button from '@/app/components/ui/button';
 import Input from '@/app/components/ui/input';
 import styled from 'styled-components';
 import Loader from '../../components/ui/Loader.jsx';
 import ToggleSection from '../../components/ui/toggle.jsx';
+import { useRouter } from 'next/router.js';
+import { useParams } from 'next/navigation.js';
 
 const CompanyContainer = styled.div`
   display: flex;
@@ -105,7 +107,7 @@ const Title = styled.h2`
   margin-bottom: 15px;
 `;
 
-const SubTitle = styled.h3`
+const SubTitle = styled.h1`
   font-size: 1.5rem;
   margin-bottom: 10px;
 `;
@@ -132,7 +134,7 @@ const DataContainer = styled.div`
   color: #333; /* Dark text color */
 `;
 
-const SectionTitle = styled.h3`
+const SectionTitle = styled.h1`
   font-size: 1.8rem;
   margin-bottom: 10px;
   color: #007bff; /* Primary color for titles */
@@ -190,7 +192,11 @@ const comp = {
 };
 
 
-const Company = () => {
+const Company = async () => {
+
+  const params = useParams<{company:string}>()
+  const companyID = params.company
+  console.log(companyID)
   const [companyName, setCompanyName] = useState('');
   const [matchingCompanies, setMatchingCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
@@ -199,8 +205,7 @@ const Company = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [financialData, setFinancialData] = useState([1, 2]);
 
-  // setFinancialData([1,1,1,3])
-
+  
   return (
     <CompanyContainer>
       <div className='text-2xl mb-3 font-bold'>
@@ -215,7 +220,7 @@ const Company = () => {
       }
       <Card>
         <CardHeader>
-          <h1 className='text-cyan-700 text-4xl'>Zooxo</h1>
+          <div className='text-cyan-700 text-4xl'>Zooxo</div>
         </CardHeader>
         <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
 
