@@ -57,6 +57,7 @@ export default function useGoogle(use_type) {
       setCurrentState("idle");
     }
   };
+  
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       setCurrentState("processing");
@@ -66,9 +67,9 @@ export default function useGoogle(use_type) {
         await handleLogin(res);
       } else if (use_type == "signup") {
         await handleSignup(res);
-      }else{
-        setCurrentState("idle")
-        setGmail(res)
+      } else {
+        setCurrentState("idle");
+        setGmail(res);
       }
     },
     ux_mode: "redirect",
@@ -82,7 +83,7 @@ export default function useGoogle(use_type) {
         onClick={login}
       >
         <i className="fab fa-google mr-2"></i>
-        {gmail ||(use_type=="signup"?"Link ":"")+"Google"}
+        {gmail || (use_type == "signup" ? "Link " : "") + "Google"}
       </div>
     </>
   );

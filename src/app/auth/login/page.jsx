@@ -9,8 +9,8 @@ import useGithub from "../_authMethods/github";
 export default function Page() {
   const router = useRouter();
   const cookies = useCookies();
-  const [gmail, googleComponentState, googleComponent] = useGoogle("login");
-  const [github, githubComponentState, githubComponent] = useGithub("login");
+  const [ , googleComponentState, googleComponent] = useGoogle("login");
+  const [ , githubComponentState, githubComponent] = useGithub("login");
   const [userDoesNotExistWarning, setUserDoesNotExistWarning] = useState(false);
   const [githubErrorWarning, setGithubErrorWarning] = useState(false);
 
@@ -105,7 +105,7 @@ export default function Page() {
 
         {githubErrorWarning && (
           <div className="flex text-red-600 italic text-sm mt-2 justify-center">
-            GitHub authentication failed
+            GitHub authentication failed. User does not exist
           </div>
         )}
         <div className="flex space-x-6 mt-8">
