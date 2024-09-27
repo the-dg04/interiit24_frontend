@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   LineChart,
@@ -135,7 +135,7 @@ const DataContainer = styled.div`
 `;
 
 const SectionTitle = styled.h1`
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   margin-bottom: 10px;
   color: #007bff; /* Primary color for titles */
 `;
@@ -169,44 +169,121 @@ const metrics = [
   { key: 'MarketShare', label: 'Market Share', color: '#ff7300' },
 ];
 
-const comp = {
-  same_country_count: 25,  // Dummy count of companies in the same country
-  greater_diversity_count: 10,  // Dummy count of companies with greater diversity
-  financial_changes: [
-    { 
-      year: 2021, 
-      stock_price_change: 5.67, 
-      expense_change: -2.34 
+const dummySearchHistory = {
+  ID: 1,
+  UserID: 1,
+  CompanyID: 1,
+  Company: {
+    ID: 1,
+    Name: "Zoozo",
+    Country: "USA",
+    CountryCode: "US",
+    MarketCap: 5000000.0,
+    Diversity: 0.75,
+    Financials: [
+      {
+        Year: 2022,
+        StockPrice: 150.0,
+        Expense: 50000.0,
+        Revenue: 200000.0,
+        MarketShare: 25.5,
+      },
+      {
+        Year: 2023,
+        StockPrice: 170.0,
+        Expense: 55000.0,
+        Revenue: 220000.0,
+        MarketShare: 30.0,
+      },
+    ],
+  },
+  StoredResult: {
+    same_country_count: 15,
+    greater_diversity_count: 10,
+    financial_changes: [
+      {
+        year: 2023,
+        stock_price_change: 13.3,
+        expense_change: 10.0,
+        revenue_change: 10.0,
+        market_share_change: 4.5,
+      },
+    ],
+    greater_metrics_domestic: 14,
+    greater_metrics_global: 24,
+    analysis: {
+      insight: "Zooxo has shown a steady financial growth over the last year.",
     },
-    { 
-      year: 2022, 
-      stock_price_change: 8.45, 
-      expense_change: 1.56 
-    },
-    { 
-      year: 2023, 
-      stock_price_change: 12.33, 
-      expense_change: -0.75 
-    }
-  ]
+  },
+  Timestamp: "2023-09-27T10:00:00Z",
 };
 
 
-const Company = async () => {
+interface FinancialChange {
+  year: number;
+  stock_price_change: number;
+  expense_change: number;
+  revenue_change: number;
+  market_share_change: number;
+}
 
-  const params = useParams<{company:string}>()
+interface StoredResult {
+  same_country_count: number;
+  greater_diversity_count: number;
+  financial_changes: FinancialChange[];
+  greater_metrics_domestic: Record<string, number>;
+  greater_metrics_global: Record<string, number>;
+  analysis: Record<string, string>;
+}
+
+interface Company {
+  ID: number;
+  Name: string;
+  Country: string;
+  CountryCode: string;
+  MarketCap: number;
+  Diversity: number;
+}
+
+interface SearchHistory {
+  ID: number;
+  UserID: number;
+  CompanyID: number;
+  Company: Company;
+  StoredResult: StoredResult;
+  Timestamp: string;
+}
+
+const Company = () => {
+
+  const params = useParams<{ company: string }>()
   const companyID = params.company
   console.log(companyID)
-  const [companyName, setCompanyName] = useState('');
-  const [matchingCompanies, setMatchingCompanies] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState(null);
-  const [companyData, setCompanyData] = useState(comp);
 
+  const [companyData, setCompanyData] = useState(dummySearchHistory);
+  const [result, setResult] = useState()
   const [isLoading, setIsLoading] = useState(false);
   const [financialData, setFinancialData] = useState([1, 2]);
 
-  
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const res = await axios.get(`http://localhost:6969/api/user/search-histories/${companyID}`)
+      setCompanyData(res.data)
+
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+
+  useEffect(()=>{
+    fetchData()
+  },[])
+
   return (
+    
     <CompanyContainer>
       <div className='text-2xl mb-3 font-bold'>
         Company details
@@ -220,13 +297,11 @@ const Company = async () => {
       }
       <Card>
         <CardHeader>
-          <div className='text-cyan-700 text-4xl'>Zooxo</div>
+          <div className='text-cyan-700 text-4xl'>{companyData.Company.Name}</div>
         </CardHeader>
-        <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <CardContent>
 
-
-
-          {financialData.length > 0 && metrics.map((metric) => (
+          {/* {financialData.length > 0 && metrics.map((metric) => (
             <div key={metric.key} style={{ marginBottom: '40px', width: '100%' }}>
               <SubTitle>{metric.label}</SubTitle>
               <ResponsiveContainer width="100%" height={300} >
@@ -240,24 +315,43 @@ const Company = async () => {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-          ))}
+          ))} */}
 
           {companyData && (
             <DataContainer>
               <SectionTitle>Companies in Same Country</SectionTitle>
-              <SectionText><strong>Count:</strong> {companyData.same_country_count}</SectionText>
+              <SectionText><strong>Count:</strong> {companyData.StoredResult.same_country_count}</SectionText>
               <SectionTitle>Companies with Greater Diversity</SectionTitle>
-              <SectionText><strong>Count:</strong> {companyData.greater_diversity_count}</SectionText>
+              <SectionText><strong>Count:</strong> {companyData.StoredResult.greater_diversity_count}</SectionText>
               <SectionTitle>Financial Changes</SectionTitle>
               <FinancialChangeList>
-                {companyData.financial_changes.map((change, index) => (
-                  <FinancialChangeItem key={index}>
-                    Year: {change.year},
-                    Stock Price Change: {change.stock_price_change.toFixed(2)}%,
-                    Expense Change: {change.expense_change.toFixed(2)}%
+                {companyData.StoredResult.financial_changes.map((change, index) => (
+                  <FinancialChangeItem key={index} className='flex flex-col'>
+                    <div>
+                    <span className='font-bold'>Year</span>: {change.year}, 
+                    <span className='font-bold'>  Stock Price Change</span>: {change.stock_price_change.toFixed(2)}%,
+                    <span className='font-bold'>  Expense Change</span>: {change.expense_change.toFixed(2)}%,
+                    </div>
+                    <div>
+                    <span className='font-bold'>  Revenue Change</span>: {change.revenue_change.toFixed(2)}%,
+                    <span className='font-bold'>  Market Share Change</span>: {change.market_share_change.toFixed(2)}%
+                    </div>
                   </FinancialChangeItem>
                 ))}
               </FinancialChangeList>
+              <SectionTitle>Domestic Metrics</SectionTitle>
+              <FinancialChangeList>
+                <FinancialChangeItem>
+                  <span className='font-bold'>Count: </span> {companyData.StoredResult.greater_metrics_domestic}
+                </FinancialChangeItem>
+              </FinancialChangeList>
+              <SectionTitle>Global Metrics</SectionTitle>
+              <FinancialChangeList>
+                <FinancialChangeItem>
+                  <span className='font-bold'>Count: </span> {companyData.StoredResult.greater_metrics_global}
+                </FinancialChangeItem>
+              </FinancialChangeList>
+              
             </DataContainer>
           )}
         </CardContent>

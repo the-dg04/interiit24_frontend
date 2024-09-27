@@ -60,7 +60,7 @@ const page = () => {
 
             <div style={styles.container} className='mx-12'>
 
-                <div style={styles.cardContainer}>
+                <div className='flex flex-wrap justify-center'>
                     {data.map((company, index) => (
                         <HistoryCard key={index} company={company} />
                     ))}
