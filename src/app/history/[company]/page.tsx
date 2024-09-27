@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   LineChart,
@@ -192,7 +192,7 @@ const comp = {
 };
 
 
-const Company = async () => {
+const Company = () => {
 
   const params = useParams<{company:string}>()
   const companyID = params.company
@@ -205,6 +205,21 @@ const Company = async () => {
   const [isLoading, setIsLoading] = useState(false);
   const [financialData, setFinancialData] = useState([1, 2]);
 
+  const fetchData = async () => {
+    try{
+      setIsLoading(true);
+      const res = await axios.get(`http://localhost:6969/api/user/search-histories/${companyID}`)
+      setCompanyData(res.data)
+      setIsLoading(false);
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+
+  // useEffect(()=>{
+  //   fetchData()
+  // },[])
   
   return (
     <CompanyContainer>
@@ -222,9 +237,7 @@ const Company = async () => {
         <CardHeader>
           <div className='text-cyan-700 text-4xl'>Zooxo</div>
         </CardHeader>
-        <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-
-
+        <CardContent>
 
           {financialData.length > 0 && metrics.map((metric) => (
             <div key={metric.key} style={{ marginBottom: '40px', width: '100%' }}>
