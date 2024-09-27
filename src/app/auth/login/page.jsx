@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import useField from "./useField";
 import useGoogle from "../_authMethods/google";
