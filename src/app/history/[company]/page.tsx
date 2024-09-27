@@ -212,7 +212,8 @@ const dummySearchHistory = {
     greater_metrics_domestic: 14,
     greater_metrics_global: 24,
     analysis: {
-      insight: "Zooxo has shown a steady financial growth over the last year.",
+      cagr: 2,
+      volatility: 4
     },
   },
   Timestamp: "2023-09-27T10:00:00Z",
@@ -278,9 +279,9 @@ const Company = () => {
   }
 
 
-  useEffect(()=>{
-    fetchData()
-  },[])
+  // useEffect(()=>{
+  //   fetchData()
+  // },[])
 
   return (
     
@@ -349,6 +350,14 @@ const Company = () => {
               <FinancialChangeList>
                 <FinancialChangeItem>
                   <span className='font-bold'>Count: </span> {companyData.StoredResult.greater_metrics_global}
+                </FinancialChangeItem>
+              </FinancialChangeList>
+              <SectionTitle>Analytics</SectionTitle>
+              <FinancialChangeList>
+                <FinancialChangeItem className=''>
+                  <span className='font-bold'>CAGR: </span> {companyData.StoredResult.analysis.cagr}
+                  <span className='font-bold'>, Volatility: </span> {companyData.StoredResult.analysis.volatility}
+
                 </FinancialChangeItem>
               </FinancialChangeList>
               
