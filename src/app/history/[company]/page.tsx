@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 import { Card, CardHeader, CardContent } from '../../components/ui/card.jsx';
 import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert.jsx';
+import AuthBackgroundWrapper from '@/app/components/ui/AuthBackgroundWrapper.jsx';
 import Button from '@/app/components/ui/button';
 import Input from '@/app/components/ui/input';
 import styled from 'styled-components';
@@ -28,88 +29,14 @@ const CompanyContainer = styled.div`
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  max-width: 1200px;
+  max-width: 12
+  00px;
   margin: 0 auto;
   padding: 40px;
   background: url('https://images.unsplash.com/photo-1516116216620-e18592f1c2f7') no-repeat center center fixed;
   background-size: cover;
   position: relative;
   color: white;
-`;
-
-const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 30px;
-  width: 100%;
-  z-index: 2;
-`;
-
-const StyledInput = styled(Input)`
-  flex: 1;
-  margin-right: 10px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-
-  &::placeholder {
-    color: #888;
-  }
-`;
-
-const SearchButton = styled(Button)`
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-const CompanyList = styled.ul`
-  list-style-type: none;
-  padding: 0;
-  width: 100%;
-`;
-
-const CompanyItem = styled.li`
-  padding: 15px;
-  margin-bottom: 10px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-
-  position: relative;
-  z-index: 2;
-`;
-
-const ComputationAlert = styled(Alert)`
-  margin-bottom: 20px;
-  z-index: 2;
-`;
-
-const Title = styled.h2`
-  font-size: 2rem;
-  margin-bottom: 15px;
-`;
-
-const SubTitle = styled.h1`
-  font-size: 1.5rem;
-  margin-bottom: 10px;
 `;
 
 const LoaderWrapper = styled.div`
@@ -162,12 +89,6 @@ const FinancialChangeItem = styled.li`
     background-color: rgba(0, 123, 255, 0.2); /* Darker blue on hover */
   }
 `;
-const metrics = [
-  { key: 'StockPrice', label: 'Stock Price', color: '#8884d8' },
-  { key: 'Revenue', label: 'Revenue', color: '#82ca9d' },
-  { key: 'Expense', label: 'Expense', color: '#ffc658' },
-  { key: 'MarketShare', label: 'Market Share', color: '#ff7300' },
-];
 
 const dummySearchHistory = {
   ID: 1,
@@ -279,93 +200,79 @@ const Company = () => {
   }
 
 
-  // useEffect(()=>{
-  //   fetchData()
-  // },[])
+  useEffect(()=>{
+    fetchData()
+  },[])
 
   return (
-    
-    <CompanyContainer>
-      <div className='text-2xl mb-3 font-bold'>
-        Company details
-      </div>
-      {
-        isLoading && (
-          <LoaderWrapper>
-            <Loader />
-          </LoaderWrapper>
-        )
-      }
-      <Card>
-        <CardHeader>
-          <div className='text-cyan-700 text-4xl'>{companyData.Company.Name}</div>
-        </CardHeader>
-        <CardContent>
+    <AuthBackgroundWrapper>
+      <CompanyContainer>
+        <div className='text-2xl mt-[50px] mb-3 font-bold'>
+          Company details
+        </div>
+        {
+          isLoading && (
+            <LoaderWrapper>
+              <Loader />
+            </LoaderWrapper>
+          )
+        }
+        <div className="relative bg-white/10 backdrop-blur-md border border-white/10 shadow-[0_0_40px_rgba(8,7,16,0.6)] rounded-lg p-8 maxw-[1000px]">
+          <CardHeader>
+            <div className='text-cyan-400 text-3xl'>{companyData.Company.Name}</div>
+          </CardHeader>
+          <CardContent>
 
-          {/* {financialData.length > 0 && metrics.map((metric) => (
-            <div key={metric.key} style={{ marginBottom: '40px', width: '100%' }}>
-              <SubTitle>{metric.label}</SubTitle>
-              <ResponsiveContainer width="100%" height={300} >
-                <LineChart data={financialData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }} style={{ backgroundColor: 'white' }} >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="Year" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey={metric.key} stroke={metric.color} name={metric.label} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          ))} */}
 
-          {companyData && (
-            <DataContainer>
-              <SectionTitle>Companies in Same Country</SectionTitle>
-              <SectionText><strong>Count:</strong> {companyData.StoredResult.same_country_count}</SectionText>
-              <SectionTitle>Companies with Greater Diversity</SectionTitle>
-              <SectionText><strong>Count:</strong> {companyData.StoredResult.greater_diversity_count}</SectionText>
-              <SectionTitle>Financial Changes</SectionTitle>
-              <FinancialChangeList>
-                {companyData.StoredResult.financial_changes.map((change, index) => (
-                  <FinancialChangeItem key={index} className='flex flex-col'>
-                    <div>
-                    <span className='font-bold'>Year</span>: {change.year}, 
-                    <span className='font-bold'>  Stock Price Change</span>: {change.stock_price_change.toFixed(2)}%,
-                    <span className='font-bold'>  Expense Change</span>: {change.expense_change.toFixed(2)}%,
-                    </div>
-                    <div>
-                    <span className='font-bold'>  Revenue Change</span>: {change.revenue_change.toFixed(2)}%,
-                    <span className='font-bold'>  Market Share Change</span>: {change.market_share_change.toFixed(2)}%
-                    </div>
+            {companyData && (
+              <DataContainer>
+                <SectionTitle>Companies in Same Country</SectionTitle>
+                <SectionText><strong>Count:</strong> {companyData.StoredResult.same_country_count}</SectionText>
+                <SectionTitle>Companies with Greater Diversity</SectionTitle>
+                <SectionText><strong>Count:</strong> {companyData.StoredResult.greater_diversity_count}</SectionText>
+                <SectionTitle>Financial Changes</SectionTitle>
+                <FinancialChangeList>
+                  {companyData.StoredResult.financial_changes.map((change, index) => (
+                    <FinancialChangeItem key={index} className='flex flex-col justify-evenly'>
+                      <div>
+                        <span className='font-bold'>Year</span>: {change.year},
+                        <span className='font-bold'>  Stock Price Change</span>: {change.stock_price_change.toFixed(2)}%,
+                        <span className='font-bold'>  Expense Change</span>: {change.expense_change.toFixed(2)}%,
+                      </div>
+                      <div>
+                        <span className='font-bold'>  Revenue Change</span>: {change.revenue_change.toFixed(2)}%,
+                        <span className='font-bold'>  Market Share Change</span>: {change.market_share_change.toFixed(2)}%
+                      </div>
+                    </FinancialChangeItem>
+                  ))}
+                </FinancialChangeList>
+                <SectionTitle>Domestic Metrics</SectionTitle>
+                <FinancialChangeList>
+                  <FinancialChangeItem>
+                    <span className='font-bold'>Count: </span> {companyData.StoredResult.greater_metrics_domestic}
                   </FinancialChangeItem>
-                ))}
-              </FinancialChangeList>
-              <SectionTitle>Domestic Metrics</SectionTitle>
-              <FinancialChangeList>
-                <FinancialChangeItem>
-                  <span className='font-bold'>Count: </span> {companyData.StoredResult.greater_metrics_domestic}
-                </FinancialChangeItem>
-              </FinancialChangeList>
-              <SectionTitle>Global Metrics</SectionTitle>
-              <FinancialChangeList>
-                <FinancialChangeItem>
-                  <span className='font-bold'>Count: </span> {companyData.StoredResult.greater_metrics_global}
-                </FinancialChangeItem>
-              </FinancialChangeList>
-              <SectionTitle>Analytics</SectionTitle>
-              <FinancialChangeList>
-                <FinancialChangeItem className=''>
-                  <span className='font-bold'>CAGR: </span> {companyData.StoredResult.analysis.cagr}
-                  <span className='font-bold'>, Volatility: </span> {companyData.StoredResult.analysis.volatility}
+                </FinancialChangeList>
+                <SectionTitle>Global Metrics</SectionTitle>
+                <FinancialChangeList>
+                  <FinancialChangeItem>
+                    <span className='font-bold'>Count: </span> {companyData.StoredResult.greater_metrics_global}
+                  </FinancialChangeItem>
+                </FinancialChangeList>
+                <SectionTitle>Analytics</SectionTitle>
+                <FinancialChangeList>
+                  <FinancialChangeItem className=''>
+                    <span className='font-bold'>CAGR: </span> {companyData.StoredResult.analysis.cagr}
+                    <span className='font-bold'>, Volatility: </span> {companyData.StoredResult.analysis.volatility}
 
-                </FinancialChangeItem>
-              </FinancialChangeList>
-              
-            </DataContainer>
-          )}
-        </CardContent>
-      </Card>
-    </CompanyContainer>
+                  </FinancialChangeItem>
+                </FinancialChangeList>
+                
+              </DataContainer>
+            )}
+          </CardContent>
+        </div>
+      </CompanyContainer>
+    </AuthBackgroundWrapper>
   );
 };
 
