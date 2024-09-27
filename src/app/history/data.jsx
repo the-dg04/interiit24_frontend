@@ -2,7 +2,7 @@ const data = [
     {
         Company: "Zooxo",
         country: "Ukraine",
-        CompanyID: "UAH",
+        CompanyID: 101, // Assigned 3-digit number
         sameCountry: 3,
         greaterDiv: 2,
         change: [200, 20, 30, 34],
@@ -11,7 +11,7 @@ const data = [
     {
         Company: "Acme Corp",
         country: "United States",
-        CompanyID: "USD",
+        CompanyID: 102, // Assigned 3-digit number
         sameCountry: 5,
         greaterDiv: 3,
         change: [300, 50, 20, 25],
@@ -20,7 +20,7 @@ const data = [
     {
         Company: "Globex",
         country: "United Kingdom",
-        CompanyID: "GBP",
+        CompanyID: 103, // Assigned 3-digit number
         sameCountry: 2,
         greaterDiv: 1,
         change: [150, 40, 25, 30],
@@ -29,7 +29,7 @@ const data = [
     {
         Company: "Initech",
         country: "Canada",
-        CompanyID: "CAD",
+        CompanyID: 104, // Assigned 3-digit number
         sameCountry: 4,
         greaterDiv: 2,
         change: [250, 30, 40, 60],
@@ -38,7 +38,7 @@ const data = [
     {
         Company: "Hooli",
         country: "Germany",
-        CompanyID: "EUR",
+        CompanyID: 105, // Assigned 3-digit number
         sameCountry: 3,
         greaterDiv: 2,
         change: [220, 25, 45, 50],
@@ -47,7 +47,7 @@ const data = [
     {
         Company: "Initech",
         country: "Canada",
-        CompanyID: "CAD",
+        CompanyID: 106, // Assigned 3-digit number
         sameCountry: 4,
         greaterDiv: 2,
         change: [250, 30, 40, 60],
@@ -56,7 +56,7 @@ const data = [
     {
         Company: "Initech",
         country: "Canada",
-        CompanyID: "CAD",
+        CompanyID: 107, // Assigned 3-digit number
         sameCountry: 4,
         greaterDiv: 2,
         change: [250, 30, 40, 60],
@@ -64,7 +64,4 @@ const data = [
     }
 ];
 
-
-export default data
-
-//0 - stock price, 1 - market share, 2 - revenue, 3 - expense
+export default data;
