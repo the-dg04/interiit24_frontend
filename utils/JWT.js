@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 const signupKey = process.env.NEXT_PUBLIC_USERNAME_SECRET;
 
