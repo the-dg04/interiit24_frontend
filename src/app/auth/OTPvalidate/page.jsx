@@ -4,7 +4,6 @@ import useOTP from "./useOTP";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import useField from "../recover/useField";
-import AuthBackgroundWrapper from "./../../components/ui/AuthBackgroundWrapper";
 export default function Page() {
   const [otp, otpComponent] = useOTP();
   const [otpWarning, setOtpWarning] = useState(false);
@@ -62,7 +61,6 @@ export default function Page() {
 
   return (
     <>
-      <AuthBackgroundWrapper>
         <div className="relative bg-white/10 backdrop-blur-md border border-white/10 shadow-[0_0_40px_rgba(8,7,16,0.6)] rounded-lg p-10 w-[400px]">
           <h3 className="text-center text-white text-2xl font-medium">2FA</h3>
           {otpComponent}
@@ -84,7 +82,6 @@ export default function Page() {
             Resend OTP
           </a>
         </div>
-      </AuthBackgroundWrapper>
     </>
   );
 }
