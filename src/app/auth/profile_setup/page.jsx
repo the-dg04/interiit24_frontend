@@ -25,7 +25,7 @@ export default function Page() {
   });
   const createAccount = async () => {
     createAccountRef.current.disabled = true;
-    createAccountRef.current.backgroundColor = "gray";
+    createAccountRef.current.style.backgroundColor = "gray";
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/create`,
       {
@@ -51,7 +51,7 @@ export default function Page() {
     } else {
       console.log(resJSON.message);
       createAccountRef.current.disabled = false;
-      createAccountRef.current.backgroundColor = "white";
+      createAccountRef.current.style.backgroundColor = "white";
     }
   };
   return (
