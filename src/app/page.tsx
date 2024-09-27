@@ -1,6 +1,6 @@
 // 'use client'
-import GoogleLoginFunction from "./auth/login/google";
-import GithubAuth from "./auth/login/githubAuth";
+import GoogleLoginFunction from "./auth/_authMethods/google";
+import GithubAuth from "./auth/_authMethods/githubAuth";
 import { CookiesProvider } from "next-client-cookies/server";
 import Link from "next/link";
 

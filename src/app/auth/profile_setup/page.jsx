@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import useField from "./useField";
-import useGoogle from "../login/google";
+import useGoogle from "../_authMethods/google";
 import { decodeUsername } from "@/../utils/JWT";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthBackgroundWrapper from "./../../components/ui/AuthBackgroundWrapper";

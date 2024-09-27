@@ -1,10 +1,10 @@
 "use client";
 import useField from "./useField";
-import useGoogle from "./google";
+import useGoogle from "../_authMethods/google";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import GithubAuth from "./githubAuth";
+import GithubAuth from "../_authMethods/githubAuth";
 import AuthBackgroundWrapper from "./../../components/ui/AuthBackgroundWrapper";
 
 export default function Page() {
