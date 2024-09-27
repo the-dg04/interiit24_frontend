@@ -2,15 +2,15 @@
 import { useEffect, useState } from "react";
 
 function GithubAuth() {
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
-	let urlParams;
-	if (typeof window !== 'undefined') {
-	  urlParams = new URLSearchParams(window.location.search);
-	} else {
-	  urlParams = new URLSearchParams();
-	}
-	const [code, setCode] = useState(urlParams.get("code"));
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  let urlParams;
+  if (typeof window !== "undefined") {
+    urlParams = new URLSearchParams(window.location.search);
+  } else {
+    urlParams = new URLSearchParams();
+  }
+  const [code, setCode] = useState(urlParams.get("code"));
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -20,28 +20,35 @@ function GithubAuth() {
     if (authCode && !localStorage.getItem("token")) {
       authenticateWithGithub(authCode);
     }
-
-    const authenticateWithGithub = (code) => {
-      setLoading(true);
-      fetch(
-        `http://localhost:6969/oauth/redirect?code=${code}&state=YOUR_RANDOMLY_GENERATED_STATE`
-      )
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Failed to authenticate with GitHub");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          checkUserExists(data);
-        })
-        .catch((error) => {
-          console.error("Authentication error:", error);
-          setError(error.message);
-          setLoading(false);
-        });
-    };
   }, [code]);
+
+  const authenticateWithGithub = (code) => {
+    setLoading(true);
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/githubLogin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code: code }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to authenticate with GitHub");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(`Email: ${data.email}`);
+        console.log(`Username: ${data.login}`);
+        console.log(`Name: ${data.name}`);
+        console.log(checkUserExists(data)); // Verify User Existence : Requires Further Integration
+      })
+      .catch((error) => {
+        console.error("Authentication error:", error);
+        setError(error.message);
+        setLoading(false);
+      });
+  };
 
   const checkUserExists = (data) => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/checkGithub`, {
@@ -50,7 +57,7 @@ function GithubAuth() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${data.accessToken}`,
       },
-      body: JSON.stringify({ github: data.userData.email }), // Assuming GitHub email is part of userData
+      body: JSON.stringify({ github: data.userData.email }),
     })
       .then((res) => {
         if (!res.ok) {
@@ -61,7 +68,6 @@ function GithubAuth() {
       .then((userRes) => {
         if (userRes.userExists) {
           localStorage.setItem("token", `Bearer ${data.accessToken}`);
-          // Redirect user or perform additional actions
         } else {
           setError("No account associated with this GitHub email.");
         }
