@@ -1,9 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 
-function GithubAuth() {
+export default function useGithub(use_type) {
+  const [github, setGithub] = useState(null);
+  const [currentState, setCurrentState] = useState("idle");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
   let urlParams;
   if (typeof window !== "undefined") {
     urlParams = new URLSearchParams(window.location.search);
@@ -24,6 +27,7 @@ function GithubAuth() {
   }, [code]);
 
   const authenticateWithGithub = (code) => {
+    setCurrentState("processing");
     setLoading(true);
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/githubLogin`, {
       method: "POST",
@@ -39,15 +43,13 @@ function GithubAuth() {
         return res.json();
       })
       .then((data) => {
-        console.log(`Email: ${data.email}`);
-        console.log(`Username: ${data.login}`);
-        console.log(`Name: ${data.name}`);
-        console.log(checkUserExists(data)); // Verify User Existence : Requires Further Integration
+        checkUserExists(data);
       })
       .catch((error) => {
         console.error("Authentication error:", error);
         setError(error.message);
         setLoading(false);
+        setCurrentState("error");
       });
   };
 
@@ -69,8 +71,11 @@ function GithubAuth() {
       .then((userRes) => {
         if (userRes.userExists) {
           localStorage.setItem("token", `Bearer ${data.accessToken}`);
+          setGithub(data);
+          setCurrentState("idle");
         } else {
           setError("No account associated with this GitHub email.");
+          setCurrentState("error");
         }
         setLoading(false);
       })
@@ -78,6 +83,7 @@ function GithubAuth() {
         console.error("Error verifying user:", error);
         setError(error.message);
         setLoading(false);
+        setCurrentState("error");
       });
   };
 
@@ -88,22 +94,14 @@ function GithubAuth() {
     window.location.href = authUrl;
   };
 
-  if (loading) {
-    return <h4>Loading...</h4>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  return (
-    <button
+  const component = (
+    <div
       className="flex-1 text-center bg-white/30 py-3 rounded-lg text-white hover:bg-white/50 cursor-pointer p-2"
       onClick={redirectToGitHub}
     >
       GitHub
-    </button>
+    </div>
   );
-}
 
-export default GithubAuth;
+  return [github, currentState, component];
+}

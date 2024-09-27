@@ -1,6 +1,5 @@
 "use client";
 import { useGoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { useCookies } from "next-client-cookies";
 import { useRouter } from "next/navigation";
 import { encodeGmail, getUserEmail } from "@/../utils/OAuth";
