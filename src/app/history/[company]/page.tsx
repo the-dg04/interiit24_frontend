@@ -200,9 +200,9 @@ const Company = () => {
   }
 
 
-  // useEffect(()=>{
-  //   fetchData()
-  // },[])
+  useEffect(()=>{
+    fetchData()
+  },[])
 
   return (
     <AuthBackgroundWrapper>

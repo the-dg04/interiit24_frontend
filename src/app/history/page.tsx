@@ -38,9 +38,9 @@ const page = () => {
         }
     }
 
-    // useEffect(() => {
-    //     fetchHistory();
-    //   }, []);
+    useEffect(() => {
+        fetchHistory();
+      }, []);
 
     return (
         <>
