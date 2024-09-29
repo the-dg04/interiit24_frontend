@@ -15,7 +15,7 @@ export const getUserGithub = async (token) => {
 };
 
 export const encodeGithub = (github) => {
-  const token = jwt.sign({github:github}, gmailKey);
+  const token = jwt.sign({github:github}, githubKey);
   return token;
 };
 

@@ -40,8 +40,7 @@ const page = () => {
 
     useEffect(() => {
         fetchHistory();
-      }, []);
-
+    }, []);
     return (
         <>
             <AuthBackgroundWrapper>
