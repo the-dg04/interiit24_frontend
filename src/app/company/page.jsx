@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import AuthBackgroundWrapper from "../components/ui/AuthBackgroundWrapper.jsx";
 import axios from 'axios';
 import {
   LineChart,
@@ -17,29 +18,27 @@ import Button from '../components/ui/button.tsx';
 import Input from '../components/ui/input.tsx';
 import styled from 'styled-components';
 import Loader from '../components/ui/Loader.jsx';
-import ToggleSection from '../components/ui/toggle.jsx';
+import { useCookies } from 'next-client-cookies';
 
 const CompanyContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px;
-  background: url('https://images.unsplash.com/photo-1516116216620-e18592f1c2f7') no-repeat center center fixed;
+  padding: 20px;
   background-size: cover;
   position: relative;
   color: white;
+  height: 100vh;
+  overflow-y: auto;
 `;
 
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   width: 100%;
   z-index: 2;
 `;
@@ -76,16 +75,18 @@ const CompanyList = styled.ul`
   list-style-type: none;
   padding: 0;
   width: 100%;
+  margin-bottom: 20px;
 `;
 
 const CompanyItem = styled.li`
-  padding: 15px;
-  margin-bottom: 10px;
-  background-color: rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: ${(props) => (props.selected ? 'rgba(255, 255, 0, 0.5)' : 'rgba(255, 255, 255, 0.2)')}; // Change background color when selected
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: background-color 0.2s ease;
+  font-weight: ${(props) => (props.selected ? 'bold' : 'normal')}; // Apply bold style if selected
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.5);
@@ -95,19 +96,20 @@ const CompanyItem = styled.li`
   z-index: 2;
 `;
 
+
 const ComputationAlert = styled(Alert)`
   margin-bottom: 20px;
   z-index: 2;
 `;
 
 const Title = styled.h2`
-  font-size: 2rem;
-  margin-bottom: 15px;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
 `;
 
 const SubTitle = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
 `;
 
 const LoaderWrapper = styled.div`
@@ -122,25 +124,26 @@ const LoaderWrapper = styled.div`
   background: rgba(0, 0, 0, 0.7);
   z-index: 10;
 `;
+
 const DataContainer = styled.div`
-  margin-top: 20px;
-  width: 100%;
   background-color: rgba(255, 255, 255, 0.8);
-  padding: 20px;
+  padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: #333; /* Dark text color */
+  color: #333;
+  height: 100%;
+  overflow-y: auto;
 `;
 
 const SectionTitle = styled.h3`
-  font-size: 1.8rem;
-  margin-bottom: 10px;
-  color: #007bff; /* Primary color for titles */
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: #007bff;
 `;
 
 const SectionText = styled.p`
-  font-size: 1.2rem;
-  margin: 5px 0;
+  font-size: 1rem;
+  margin: 3px 0;
 `;
 
 const FinancialChangeList = styled.ul`
@@ -150,16 +153,77 @@ const FinancialChangeList = styled.ul`
 `;
 
 const FinancialChangeItem = styled.li`
-  padding: 10px;
-  background-color: rgba(0, 123, 255, 0.1); /* Light blue background */
+  padding: 5px;
+  background-color: rgba(0, 123, 255, 0.1);
   border-radius: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   transition: background-color 0.3s;
+  font-size: 0.9rem;
 
   &:hover {
-    background-color: rgba(0, 123, 255, 0.2); /* Darker blue on hover */
+    background-color: rgba(0, 123, 255, 0.2);
   }
 `;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: calc(100vh - 200px);
+  overflow: hidden;
+`;
+
+const GraphsSection = styled.div`
+  flex: 1;
+  margin-right: 10px;
+  overflow-y: auto;
+  padding-right: 10px;
+`;
+
+const InfoSection = styled.div`
+  flex: 1;
+  margin-left: 10px;
+  overflow-y: auto;
+  padding-left: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+`;
+
+const ChartContainer = styled.div`
+  margin-bottom: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+`;
+
+const AnalysisContainer = styled.div`
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e8f5e9;
+  border-left: 5px solid #4caf50;
+`;
+
+const AnalysisTitle = styled.h5`
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #2e7d32;
+`;
+
+const GrowthComment = styled.p`
+  font-size: 0.95rem;
+  color: #444;
+  margin-top: 10px;
+`;
+
+
+const classifyCompany = (cagr, volatility) => {
+  if (cagr < 0) return "Declining";
+  if (volatility >= 20) return "High Volatility";
+  if (cagr > 10) return "High Growth";
+  if (cagr > 5) return "Moderate Growth";
+  return "Stable";
+};
+
+
 const metrics = [
   { key: 'StockPrice', label: 'Stock Price', color: '#8884d8' },
   { key: 'Revenue', label: 'Revenue', color: '#82ca9d' },
@@ -175,6 +239,8 @@ const Company = () => {
   const [computationMetrics, setComputationMetrics] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [financialData, setFinancialData] = useState([]);
+  const [classification, setClassification] = useState('');
+  const cookies = useCookies();
 
   const fetchMatchingCompanies = async () => {
     try {
@@ -192,17 +258,20 @@ const Company = () => {
     setSelectedCompany(company);
     computeCompanyData(company.ID);
   };
-
   const computeCompanyData = async (companyId) => {
     try {
       setIsLoading(true);
       const startTime = Date.now();
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/company/compute/${companyId}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/company/compute/${companyId}`, {
+        headers: {
+          "Authorization": `Bearer ${cookies.get("token")}`
+        }
+      });
       const computationTime = Date.now() - startTime;
       const remainingTime = Math.max(0, 2000 - computationTime);
       await new Promise((resolve) => setTimeout(resolve, remainingTime));
       setCompanyData(response.data);
-      console.log(companyData)
+      setClassification(classifyCompany(response.data.analysis.cagr, response.data.analysis.volatility));
       setComputationMetrics({
         totalTime: computationTime < 2000 ? 2000 : computationTime,
         actualComputationTime: computationTime,
@@ -220,32 +289,36 @@ const Company = () => {
     e.preventDefault();
     fetchMatchingCompanies();
   };
-
   return (
-    <CompanyContainer>
-      {isLoading && (
-        <LoaderWrapper>
-          <Loader />
-        </LoaderWrapper>
-      )}
-      <SearchForm onSubmit={handleSearch}>
-        <StyledInput
-          label="Company Name"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-          placeholder="Enter company name"
-        />
-        <SearchButton type="submit">Search</SearchButton>
-      </SearchForm>
-      {matchingCompanies?.length > 0 && (
-        <div>
+    <AuthBackgroundWrapper>
+      <CompanyContainer>
+        {isLoading && (
+          <LoaderWrapper>
+            <Loader />
+          </LoaderWrapper>
+        )}
+        <SearchForm onSubmit={handleSearch}>
+          <StyledInput
+            label="Company Name"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            placeholder="Enter company name"
+          />
+          <SearchButton type="submit">Search</SearchButton>
+        </SearchForm>
+        {matchingCompanies?.length > 0 && (
+          <div>
             <Title>Select a Company</Title>
             <CompanyList>
               {matchingCompanies.map((company) => (
-                <CompanyItem key={company.ID} onClick={() => selectCompany(company)}>
-                  {company.Name}
-                </CompanyItem>
-              ))}
+              <CompanyItem
+                key={company.ID}
+                onClick={() => selectCompany(company)}
+                selected={selectedCompany?.ID === company.ID} // Pass selected prop
+              >
+                {company.Name}
+              </CompanyItem>
+            ))}
             </CompanyList>
           </div>
         )}
@@ -254,53 +327,69 @@ const Company = () => {
             <CardHeader>
               <h2>{selectedCompany.Name}</h2>
             </CardHeader>
-            <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-    {computationMetrics && (
-      <ComputationAlert>
-        <AlertTitle>Computation Time</AlertTitle>
-        <AlertDescription>
-          Total Time: {computationMetrics.totalTime} ms, Actual Computation Time: {computationMetrics.actualComputationTime} ms
-        </AlertDescription>
-      </ComputationAlert>
-    )}
-    {financialData.length > 0 && metrics.map((metric) => (
-      <div key={metric.key} style={{ marginBottom: '40px', width: '100%' }}>
-        <SubTitle>{metric.label}</SubTitle>
-        <ResponsiveContainer width="100%" height={300} >
-          <LineChart data={financialData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }} style={{ backgroundColor: 'white' }} >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="Year" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey={metric.key} stroke={metric.color} name={metric.label} />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    ))}
-    
-    {companyData && (
-        <DataContainer>
-          <SectionTitle>Companies in Same Country</SectionTitle>
-          <SectionText><strong>Count:</strong> {companyData.same_country_count}</SectionText>
-          <SectionTitle>Companies with Greater Diversity</SectionTitle>
-          <SectionText><strong>Count:</strong> {companyData.greater_diversity_count}</SectionText>
-          <SectionTitle>Financial Changes</SectionTitle>
-          <FinancialChangeList>
-            {companyData.financial_changes.map((change, index) => (
-              <FinancialChangeItem key={index}>
-                Year: {change.year}, 
-                Stock Price Change: {change.stock_price_change.toFixed(2)}%, 
-                Expense Change: {change.expense_change.toFixed(2)}%
-              </FinancialChangeItem>
-            ))}
-          </FinancialChangeList>
-        </DataContainer>
-      )}
-        </CardContent>
-        </Card>
-      )}
-    </CompanyContainer>
+            <CardContent>
+              {computationMetrics && (
+                <ComputationAlert>
+                  <AlertTitle>Computation Time</AlertTitle>
+                  <AlertDescription>
+                    Total Time: {computationMetrics.totalTime} ms, Actual Computation Time: {computationMetrics.actualComputationTime} ms
+                  </AlertDescription>
+                </ComputationAlert>
+              )}
+              <ContentWrapper>
+                <GraphsSection>
+                  {financialData.length > 0 && metrics.map((metric) => (
+                    <ChartContainer key={metric.key}>
+                      <SubTitle>{metric.label}</SubTitle>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <LineChart data={financialData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="Year" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Line type="monotone" dataKey={metric.key} stroke={metric.color} name={metric.label} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </ChartContainer>
+                  ))}
+                </GraphsSection>
+                <InfoSection>
+                  {companyData && (
+                    <DataContainer>
+                      <SectionTitle>Companies in Same Country</SectionTitle>
+                      <SectionText><strong>Count:</strong> {companyData.same_country_count}</SectionText>
+                      <SectionTitle>Companies with Greater Diversity</SectionTitle>
+                      <SectionText><strong>Count:</strong> {companyData.greater_diversity_count}</SectionText>
+                      <SectionTitle>Financial Changes</SectionTitle>
+                      <FinancialChangeList>
+                        {companyData.financial_changes.map((change, index) => (
+                          <FinancialChangeItem key={index}>
+                            Year: {change.year}, 
+                            Stock Price Change: {change.stock_price_change.toFixed(2)}%, 
+                            Expense Change: {change.expense_change.toFixed(2)}%
+                          </FinancialChangeItem>
+                        ))}
+                      </FinancialChangeList>
+                      <SectionTitle><strong>Greater Metric Domestic:</strong><SectionText>{companyData.greater_metrics_domestic}</SectionText></SectionTitle>
+                      <SectionTitle><strong>Greater Metric Global:</strong><SectionText>{companyData.greater_metrics_global}</SectionText> </SectionTitle>
+                      <AnalysisContainer>
+                        <AnalysisTitle>Analysis</AnalysisTitle>
+                        <SectionText><strong>CAGR:</strong> {companyData.analysis.cagr}</SectionText>
+                        <SectionText><strong>Volatility:</strong> {companyData.analysis.volatility}</SectionText>
+                        <GrowthComment>
+                          Company Classification: <strong>{classification}</strong>
+                        </GrowthComment>
+                      </AnalysisContainer>
+                    </DataContainer>
+                  )}
+                </InfoSection>
+              </ContentWrapper>
+            </CardContent>
+          </Card>
+        )}
+      </CompanyContainer>
+    </AuthBackgroundWrapper>
   );
 };
 

@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 
-const gmailKey = process.env.NEXT_PUBLIC_GMAIL_SECRET;
+const githubKey = process.env.NEXT_PUBLIC_GITHUB_SECRET;
 
-export const getUserEmail = async (token) => {
+export const getUserGithub = async (token) => {
   const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -14,13 +14,13 @@ export const getUserEmail = async (token) => {
   return resJSON.email;
 };
 
-export const encodeGmail = (gmail) => {
-  const token = jwt.sign({gmail:gmail}, gmailKey);
+export const encodeGithub = (github) => {
+  const token = jwt.sign({github:github}, githubKey);
   return token;
 };
 
-export const decodeGmail = (token) => {
+export const decodeGithub = (token) => {
   if (!token) return "";
-  const gmail = jwt.verify(token, gmailKey).gmail;
-  return gmail;
+  const github = jwt.verify(token, githubKey).github;
+  return github;
 };
