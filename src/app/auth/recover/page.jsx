@@ -11,7 +11,7 @@ export default function Page() {
     LoginRef.current.disabled = true;
     LoginRef.current.style.backgroundColor = "gray";
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/tempLogin`,
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/tempLogin`,
       {
         method: "POST",
         headers: { "Content-type": "application/json" },

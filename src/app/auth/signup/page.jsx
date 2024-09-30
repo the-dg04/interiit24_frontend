@@ -12,7 +12,7 @@ export default function Page() {
 
   const handleContinue = async () => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/CheckUsername`,
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/CheckUsername`,
       {
         method: "POST",
         headers: { "Content-type": "application/json" },

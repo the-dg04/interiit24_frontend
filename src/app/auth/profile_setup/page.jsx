@@ -26,7 +26,7 @@ export default function Page() {
     createAccountRef.current.disabled = true;
     createAccountRef.current.style.backgroundColor = "gray";
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/create`,
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/create`,
       {
         method: "POST",
         headers: {

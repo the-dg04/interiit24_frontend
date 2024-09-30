@@ -179,7 +179,7 @@ const Company = () => {
   const fetchMatchingCompanies = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`http://localhost:6969/api/company/search/?name=${companyName}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/company/search/?name=${companyName}`);
       setMatchingCompanies(response.data);
       setIsLoading(false);
     } catch (error) {
@@ -197,7 +197,7 @@ const Company = () => {
     try {
       setIsLoading(true);
       const startTime = Date.now();
-      const response = await axios.get(`http://localhost:6969/api/company/compute/${companyId}`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/company/compute/${companyId}`);
       const computationTime = Date.now() - startTime;
       const remainingTime = Math.max(0, 2000 - computationTime);
       await new Promise((resolve) => setTimeout(resolve, remainingTime));
@@ -208,7 +208,7 @@ const Company = () => {
         actualComputationTime: computationTime,
       });
       setIsLoading(false);
-      const financialResponse = await axios.get(`http://localhost:6969/api/company/${companyId}/financials`);
+      const financialResponse = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/company/${companyId}/financials`);
       setFinancialData(financialResponse.data);
     } catch (error) {
       console.error('Error computing company data:', error);

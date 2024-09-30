@@ -24,7 +24,7 @@ function GithubAuth() {
 
   const authenticateWithGithub = (code) => {
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/githubLogin`, {
+    fetch(`${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/githubLogin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +51,7 @@ function GithubAuth() {
   };
 
   const checkUserExists = (data) => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/checkGithub`, {
+    fetch(`${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/checkGithub`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

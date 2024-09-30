@@ -268,7 +268,7 @@ const Company = () => {
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get(`http://localhost:6969/api/user/search-histories/${companyID}`)
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/user/search-histories/${companyID}`)
       setCompanyData(res.data)
 
       setIsLoading(false);

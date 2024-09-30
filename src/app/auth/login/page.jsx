@@ -30,7 +30,7 @@ export default function Page() {
     LoginRef.current.disabled = true;
     LoginRef.current.style.backgroundColor = "gray";
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/login`,
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/login`,
       {
         method: "POST",
         headers: {

@@ -27,7 +27,7 @@ export default function Page() {
       bodyObject["new_password"] = newPassword;
     }
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/${
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/${
         otp_type == "login" ? "validateOTP" : "user/recoverPassword"
       }`,
       {

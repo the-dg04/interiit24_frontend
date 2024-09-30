@@ -22,7 +22,7 @@ export default function Page() {
   const handleUpdatePassword = async () => {
     const token = cookies.get("token");
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/updatePassword`,
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/updatePassword`,
       {
         method: "POST",
         headers: {
@@ -37,7 +37,7 @@ export default function Page() {
     const resJSON=await res.json()
     if(res.status==200){
       setErrorWarning(null)
-      router.push("/")
+      router.push("/auth/login")
     }else{
       setErrorWarning(resJSON.message)
     }

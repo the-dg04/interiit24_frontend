@@ -15,7 +15,7 @@ export default function useGoogle(use_type) {
   const handleLogin = async (email) => {
     const token = encodeGmail(email);
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/login`,
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/login`,
       {
         method: "POST",
         headers: {
@@ -39,7 +39,7 @@ export default function useGoogle(use_type) {
 
   const handleSignup = async (email) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/checkGmail`,
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/checkGmail`,
       {
         method: "POST",
         headers: {

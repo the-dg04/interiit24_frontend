@@ -3,17 +3,17 @@ import { jwtDecode } from "jwt-decode";
 import { useCookies } from "next-client-cookies";
 import { useRouter } from "next/navigation";
 
-const GITHUB_CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+const GITHUB_CLIENT_ID = process.env.NEXT_PUBLIC_AUTH_BACKEND_URLNEXT_PUBLIC_GITHUB_CLIENT_ID;
 
 export default function AuthButtons() {
-  const clientid = process.env.NEXT_PUBLIC_OAUTH_CLIENT_ID;
+  const clientid = process.env.NEXT_PUBLIC_AUTH_BACKEND_URLNEXT_PUBLIC_OAUTH_CLIENT_ID;
   const cookies = useCookies();
   const router = useRouter();
 
   // Google login handler
   const handleGoogleLogin = async (user) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/auth/login`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
