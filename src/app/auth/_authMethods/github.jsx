@@ -28,7 +28,7 @@ export default function useGithub(use_type) {
   }, [code]);
 
   const handleLogin = (token) => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/login`, {
+    fetch(`${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export default function useGithub(use_type) {
 
   const handleSignup = async (token) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/checkGithub`,
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/checkGithub`,
       {
         method: "POST",
         headers: {
@@ -83,7 +83,7 @@ export default function useGithub(use_type) {
   const authenticateWithGithub = (code) => {
     setCurrentState("processing");
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/githubLogin`, {
+    fetch(`${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/githubLogin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
