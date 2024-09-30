@@ -67,6 +67,7 @@ export default function useGithub(use_type) {
         },
         body: JSON.stringify({ github: token }),
       }
+      // TODO : Update .then() statements
     ).catch((err) => {
       console.log(err);
     });
