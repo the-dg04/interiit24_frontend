@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useSyncExternalStore } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import HistoryCard from "../components/ui/HistoryCard.jsx"
 import Loader from '../components/ui/Loader.jsx';

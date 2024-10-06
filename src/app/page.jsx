@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import AuthBackgroundWrapper from "./components/ui/AuthBackgroundWrapper";
 import Image from "next/image";
 export default function Page() {
@@ -11,7 +10,7 @@ export default function Page() {
             Get Started
           </h3>
           <div className="mt-4">
-            <Image src="/cat_gif.webp" height={400} width={400} />
+            <Image src="/cat_gif.webp" height={400} width={400} alt="Beluga Cat"/>
           </div>
           <a
             href="/auth/login"
