@@ -11,6 +11,7 @@ export default function Page() {
   });
 
   const handleContinue = async () => {
+    console.log(process.env.NEXT_PUBLIC_AUTH_BACKEND_URL);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/CheckUsername`,
       {

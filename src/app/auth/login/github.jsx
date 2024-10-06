@@ -1,5 +1,5 @@
 "use client";
-const GITHUB_CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+const GITHUB_CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_SIGNIN_CLIENT_ID;
 
 
 export default function GitHubLoginButton() {
