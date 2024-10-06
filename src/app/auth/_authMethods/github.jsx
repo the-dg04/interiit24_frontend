@@ -76,6 +76,8 @@ export default function useGithub(use_type) {
         setCurrentState("error");
         console.log("User already exists.");
         return;
+      } else {
+        console.log("User does not exist");
       }
 
       const signupRes = await fetch(
@@ -86,7 +88,7 @@ export default function useGithub(use_type) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            github: token
+            github: token,
           }),
         }
       );
@@ -127,6 +129,7 @@ export default function useGithub(use_type) {
         return res.json();
       })
       .then((data) => {
+        // data here
         console.log(`Email: ${data.email}`);
         const token = encodeGithub(data.login);
         console.log(`Token: ${token}`);
