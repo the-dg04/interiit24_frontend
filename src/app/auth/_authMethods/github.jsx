@@ -1,12 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 import { encodeGithub } from "../../../../utils/GAuth";
+import { useCookies } from "next-client-cookies";
+import { useRouter } from "next/navigation";
 
 export default function useGithub(use_type) {
   const [github, setGithub] = useState(null);
   const [currentState, setCurrentState] = useState("idle");
   const [, setLoading] = useState(false);
   const [, setError] = useState(null);
+  const cookies = useCookies();
+  const router = useRouter();
 
   let urlParams;
   if (typeof window !== "undefined") {
@@ -15,6 +19,7 @@ export default function useGithub(use_type) {
     urlParams = new URLSearchParams();
   }
   const [code, setCode] = useState(urlParams.get("code"));
+  const profile_token = urlParams.get("token");
 
   useEffect(() => {
     if (!code) return;
@@ -22,39 +27,46 @@ export default function useGithub(use_type) {
     const authCode = urlParams.get("code");
     setCode(authCode);
 
-    if (authCode && !localStorage.getItem("token")) {
-      authenticateWithGithub(authCode);
+    if (code) {
+      authenticateWithGithub(code);
     }
   }, [code]);
 
-  const handleLogin = (token) => {
-    fetch(`${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "login-method": "github",
-      },
-      body: JSON.stringify({ token: token }),
-    })
-      .catch((err) => {
-        console.log(err);
-      })
-      .then((res) => {
-        if (res.status !== 200) {
-          setError(true);
-        }
-        return res, res.status !== 200;
-      })
-      .then((res, err) => {
-        return res.json(), err;
-      })
-      .then((resJSON, err) => {
-        if (!err) {
-          cookies.set("temp_token", resJSON["temp_token"]);
-          cookies.set("expires_at", resJSON["expires_at"]);
-          router.push("/auth/OTPvalidate?type=login");
-        }
-      });
+  const handleLogin = async (token) => {
+    // console.log("dsfdsfjdsfjkdskfjsdf");
+    setLoading(true);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "login-method": "github",
+        },
+        body: JSON.stringify({ token: token }),
+      }
+    ).catch((err) => {
+      console.log(err);
+    });
+    const resJSON = await res.json();
+    if (res.status != 200) {
+      if (resJSON.message == "empty github") {
+        setCurrentState("processing");
+      } else {
+        setCurrentState("error");
+      }
+    } else {
+      cookies.set("temp_token", resJSON["temp_token"]);
+      cookies.set("expires_at", resJSON["expires_at"]);
+      router.push("/auth/OTPvalidate?type=login");
+    }
+    // .then((resJSON, err) => {
+    //   if (!err) {
+    //     cookies.set("temp_token", resJSON["temp_token"]);
+    //     cookies.set("expires_at", resJSON["expires_at"]);
+    //     router.push("/auth/OTPvalidate?type=login");
+    //   }
+    // });
   };
 
   const handleSignup = async (token) => {
@@ -75,36 +87,12 @@ export default function useGithub(use_type) {
       if (checkResJSON.userExists) {
         setCurrentState("error");
         console.log("User already exists.");
-        return;
+        return false;
       } else {
-        console.log("User does not exist");
+        // setGithub(checkResJSON.login);
+        // setCurrentState("success");
+        return true;
       }
-
-      const signupRes = await fetch(
-        `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/githubSignup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            github: token,
-          }),
-        }
-      );
-
-      if (!signupRes.ok) {
-        throw new Error("Failed to sign up with GitHub");
-      }
-
-      const signupResJSON = await signupRes.json();
-      console.log("User signed up successfully:", signupResJSON);
-
-      cookies.set("temp_token", signupResJSON.temp_token);
-      cookies.set("expires_at", signupResJSON.expires_at);
-      router.push("/auth/OTPvalidate?type=signup");
-
-      setCurrentState("success");
     } catch (error) {
       console.error("Signup error:", error);
       setError(error.message);
@@ -112,56 +100,56 @@ export default function useGithub(use_type) {
     }
   };
 
-  const authenticateWithGithub = (code) => {
+  const authenticateWithGithub = async (code) => {
     setCurrentState("processing");
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/githubLogin`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code: code }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to authenticate with GitHub");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        // data here
-        console.log(`Email: ${data.email}`);
-        const token = encodeGithub(data.login);
-        console.log(`Token: ${token}`);
-
-        if (use_type === "login") {
-          handleLogin(token);
-        } else if (use_type === "signup") {
-          handleSignup(token);
-        } else {
-          setCurrentState("idle");
-          setGithub(data);
-        }
-      })
-      .catch((error) => {
-        console.error("Authentication error:", error);
-        setError(error.message);
-        setLoading(false);
-        setCurrentState("error");
-      });
+    console.log(code);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/githubTokenToUserData`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ code: code }),
+      }
+    );
+    if (res.status != 200) {
+      // throw new Error("Failed to authenticate with GitHub");
+      // console.error("Authentication error:", error);
+      setError("error");
+      setLoading(false);
+      setCurrentState("error");
+    } else {
+      const resJSON = await res.json();
+      const token = encodeGithub(resJSON.login);
+      if (use_type === "login") {
+        await handleLogin(token);
+      } else if (use_type === "signup") {
+        handleSignup(token).then((res) => {
+          if (res) {
+            setGithub(resJSON.login);
+          }
+        });
+      } else {
+        setCurrentState("idle");
+      }
+    }
   };
 
   const redirectToGitHub = () => {
-    const client_id =
-      use_type !== "signup"
-        ? process.env.NEXT_PUBLIC_GITHUB_SIGNIN_CLIENT_ID
-        : process.env.NEXT_PUBLIC_GITHUB_SIGNUP_CLIENT_ID;
+    const client_id = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const scope = "read:user user:email";
+    const redirect_uri =
+      use_type === "signup"
+        ? `http://localhost:3000/auth/proxy?token=${profile_token}&use_type=signup`
+        : `http://localhost:3000/auth/proxy?use_type=login`;
     // const redirect_uri =
     //   use_type === "signup"
     //     ? `${process.env.NEXT_PUBLIC_REDIRECT_URI}/auth/profile_setup`
     //     : `${process.env.NEXT_PUBLIC_REDIRECT_URI}/auth/OTPvalidate?type=login`;
-    const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${scope}`;
+    const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`;
+    console.log(authUrl);
     window.location.href = authUrl;
   };
 
@@ -170,7 +158,7 @@ export default function useGithub(use_type) {
       className="flex-1 text-center bg-white/30 py-3 rounded-lg text-white hover:bg-white/50 cursor-pointer p-2"
       onClick={redirectToGitHub}
     >
-      GitHub
+      {github || (use_type == "signup" ? "Link " : "") + "Github"}
     </div>
   );
 

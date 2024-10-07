@@ -1,9 +1,9 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import useField from "./useField";
 import useGoogle from "../_authMethods/google";
 import useGithub from "../_authMethods/github";
-import { decodeUsername } from "@/../utils/JWT";
+import { decodeUsername, decodeUsernameToDetails } from "@/../utils/JWT";
 import { useRouter, useSearchParams } from "next/navigation";
 import { encodeGmail } from "../../../../utils/OAuth";
 import { useCookies } from "next-client-cookies";
@@ -26,9 +26,11 @@ export default function Page() {
     title: "Password*",
     placeholder: "password",
   });
+
   const createAccount = async () => {
     createAccountRef.current.disabled = true;
     createAccountRef.current.style.backgroundColor = "gray";
+    console.log(github);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/create`,
       {
@@ -41,7 +43,7 @@ export default function Page() {
           username: username,
           password: password,
           gmail: encodeGmail(gmail),
-          github: github ? "" : encodeGithub(github),
+          github: github ? encodeGithub(github) : "",
         }),
       }
     ).catch((err) => {

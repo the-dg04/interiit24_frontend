@@ -28,7 +28,20 @@ export default function Page() {
       LoginRef.current.disabled = false;
       setUserDoesNotExistWarning(true);
     }
-  }, [googleComponentState]);
+    if (githubComponentState == "idle") {
+      LoginRef.current.style.backgroundColor = "white";
+      LoginRef.current.disabled = false;
+      setUserDoesNotExistWarning(false);
+    } else if (githubComponentState == "processing") {
+      LoginRef.current.style.backgroundColor = "gray";
+      LoginRef.current.disabled = true;
+      setUserDoesNotExistWarning(false);
+    } else if (githubComponentState == "error") {
+      LoginRef.current.style.backgroundColor = "white";
+      LoginRef.current.disabled = false;
+      setUserDoesNotExistWarning(true);
+    }
+  }, [googleComponentState,githubComponentState]);
 
   useEffect(() => {
     if (githubComponentState === "idle") {
