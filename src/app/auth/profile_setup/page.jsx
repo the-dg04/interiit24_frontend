@@ -85,7 +85,7 @@ export default function Page() {
               Gmail already linked to another account
             </div>
           )}
-
+          <div className="mt-2"></div>
           {githubComponent}
 
           {githubComponentState === "error" && (

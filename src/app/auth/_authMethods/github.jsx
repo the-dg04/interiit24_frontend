@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { encodeGithub } from "../../../../utils/GAuth";
 import { useCookies } from "next-client-cookies";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function useGithub(use_type) {
   const [github, setGithub] = useState(null);
@@ -11,19 +11,11 @@ export default function useGithub(use_type) {
   const [, setError] = useState(null);
   const cookies = useCookies();
   const router = useRouter();
-
-  let urlParams;
-  if (typeof window !== "undefined") {
-    urlParams = new URLSearchParams(window.location.search);
-  } else {
-    urlParams = new URLSearchParams();
-  }
-  const [code, setCode] = useState(urlParams.get("code"));
-  const profile_token = urlParams.get("token");
-
+  const profile_token = useSearchParams().get("token");
+  const urlParams = useSearchParams();
+  const [code, setCode] = useState(useSearchParams().get("code"));
   useEffect(() => {
     if (!code) return;
-    const urlParams = new URLSearchParams(window.location.search);
     const authCode = urlParams.get("code");
     setCode(authCode);
 
@@ -128,6 +120,8 @@ export default function useGithub(use_type) {
   const redirectToGitHub = () => {
     const client_id = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const scope = "read:user user:email";
+    console.log("E", profile_token);
+    if (profile_token == null && use_type == "signup") return;
     const redirect_uri =
       use_type === "signup"
         ? `http://localhost:3000/auth/proxy?token=${profile_token}&use_type=signup`
