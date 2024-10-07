@@ -128,8 +128,8 @@ export default function useGithub(use_type) {
     if (profile_token == null && use_type == "signup") return;
     const redirect_uri =
       use_type === "signup"
-        ? `https://interiit24-frontend.vercel.app//auth/proxy?token=${profile_token}&use_type=signup`
-        : `https://interiit24-frontend.vercel.app//auth/proxy?use_type=login`;
+        ? `https://interiit24-frontend.vercel.app/auth/proxy?token=${profile_token}&use_type=signup`
+        : `https://interiit24-frontend.vercel.app/auth/proxy?use_type=login`;
     const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`;
     console.log(authUrl);
     window.location.href = authUrl;
