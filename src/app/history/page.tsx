@@ -24,7 +24,7 @@ const LoaderWrapper = styled.div`
         z-index: 10;
 `;
 
-const page = () => {
+const Page = () => {
     const [ , setCompanies] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const cookies = useCookies();
@@ -92,4 +92,4 @@ const styles = {
     },
 };
 
-export default page
+export default Page
