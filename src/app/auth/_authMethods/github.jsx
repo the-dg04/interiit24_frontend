@@ -33,7 +33,6 @@ export default function useGithub(use_type) {
   }, [code]);
 
   const handleLogin = async (token) => {
-    // console.log("dsfdsfjdsfjkdskfjsdf");
     setLoading(true);
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_AUTH_BACKEND_URL}/api/user/login`,
@@ -60,13 +59,6 @@ export default function useGithub(use_type) {
       cookies.set("expires_at", resJSON["expires_at"]);
       router.push("/auth/OTPvalidate?type=login");
     }
-    // .then((resJSON, err) => {
-    //   if (!err) {
-    //     cookies.set("temp_token", resJSON["temp_token"]);
-    //     cookies.set("expires_at", resJSON["expires_at"]);
-    //     router.push("/auth/OTPvalidate?type=login");
-    //   }
-    // });
   };
 
   const handleSignup = async (token) => {
@@ -89,8 +81,6 @@ export default function useGithub(use_type) {
         console.log("User already exists.");
         return false;
       } else {
-        // setGithub(checkResJSON.login);
-        // setCurrentState("success");
         return true;
       }
     } catch (error) {
@@ -115,8 +105,6 @@ export default function useGithub(use_type) {
       }
     );
     if (res.status != 200) {
-      // throw new Error("Failed to authenticate with GitHub");
-      // console.error("Authentication error:", error);
       setError("error");
       setLoading(false);
       setCurrentState("error");
@@ -144,10 +132,6 @@ export default function useGithub(use_type) {
       use_type === "signup"
         ? `http://localhost:3000/auth/proxy?token=${profile_token}&use_type=signup`
         : `http://localhost:3000/auth/proxy?use_type=login`;
-    // const redirect_uri =
-    //   use_type === "signup"
-    //     ? `${process.env.NEXT_PUBLIC_REDIRECT_URI}/auth/profile_setup`
-    //     : `${process.env.NEXT_PUBLIC_REDIRECT_URI}/auth/OTPvalidate?type=login`;
     const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`;
     console.log(authUrl);
     window.location.href = authUrl;
