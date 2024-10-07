@@ -103,7 +103,10 @@ export default function useGithub(use_type) {
       setCurrentState("error");
     } else {
       const resJSON = await res.json();
+      console.log(resJSON);
+      console.log(resJSON.login);
       const token = encodeGithub(resJSON.login);
+      console.log(token);
       if (use_type === "login") {
         await handleLogin(token);
       } else if (use_type === "signup") {
@@ -125,8 +128,8 @@ export default function useGithub(use_type) {
     if (profile_token == null && use_type == "signup") return;
     const redirect_uri =
       use_type === "signup"
-        ? `http://localhost:3000/auth/proxy?token=${profile_token}&use_type=signup`
-        : `http://localhost:3000/auth/proxy?use_type=login`;
+        ? `https://interiit24-frontend.vercel.app//auth/proxy?token=${profile_token}&use_type=signup`
+        : `https://interiit24-frontend.vercel.app//auth/proxy?use_type=login`;
     const authUrl = `https://github.com/login/oauth/authorize?client_id=${client_id}&scope=${scope}&redirect_uri=${redirect_uri}`;
     console.log(authUrl);
     window.location.href = authUrl;

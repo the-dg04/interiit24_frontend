@@ -9,8 +9,8 @@ import useGithub from "../_authMethods/github";
 export default function Page() {
   const router = useRouter();
   const cookies = useCookies();
-  const [ , googleComponentState, googleComponent] = useGoogle("login");
-  const [ , githubComponentState, githubComponent] = useGithub("login");
+  const [, googleComponentState, googleComponent] = useGoogle("login");
+  const [, githubComponentState, githubComponent] = useGithub("login");
   const [userDoesNotExistWarning, setUserDoesNotExistWarning] = useState(false);
   const [githubErrorWarning, setGithubErrorWarning] = useState(false);
 
@@ -28,6 +28,9 @@ export default function Page() {
       LoginRef.current.disabled = false;
       setUserDoesNotExistWarning(true);
     }
+  }, [googleComponentState]);
+
+  useEffect(() => {
     if (githubComponentState == "idle") {
       LoginRef.current.style.backgroundColor = "white";
       LoginRef.current.disabled = false;
@@ -41,7 +44,7 @@ export default function Page() {
       LoginRef.current.disabled = false;
       setUserDoesNotExistWarning(true);
     }
-  }, [googleComponentState,githubComponentState]);
+  }, [githubComponentState]);
 
   useEffect(() => {
     if (githubComponentState === "idle") {
