@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import useField from "./useField";
 import useGoogle from "../_authMethods/google";
 import useGithub from "../_authMethods/github";
-import { decodeUsername, decodeUsernameToDetails } from "@/../utils/JWT";
+import { decodeUsername} from "@/../utils/JWT";
 import { useRouter, useSearchParams } from "next/navigation";
 import { encodeGmail } from "../../../../utils/OAuth";
 import { useCookies } from "next-client-cookies";
