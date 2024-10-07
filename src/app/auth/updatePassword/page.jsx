@@ -2,13 +2,12 @@
 import { useEffect, useState } from "react";
 import useField from "./useField";
 import { useRouter } from "next/navigation";
-import { encodeUsername } from "@/../utils/JWT";
 import { useCookies } from "next-client-cookies";
 export default function Page() {
   const router = useRouter();
   const cookies = useCookies();
 
-  useEffect(()=>{if(!cookies.get("token")){router.push("/auth/login")}},[])
+  useEffect(()=>{if(!cookies.get("token")){router.push("/auth/login")}},[cookies, router])
 
   const [oldPassword, oldPasswordComponent] = useField({
     title: "Old Password",
