@@ -8,6 +8,7 @@ import AuthBackgroundWrapper from '@/app/components/ui/AuthBackgroundWrapper.jsx
 import styled from 'styled-components';
 import Loader from '../../components/ui/Loader.jsx';
 import { useParams } from 'next/navigation.js';
+import { useCookies } from 'next-client-cookies';
 
 const CompanyContainer = styled.div`
   display: flex;
@@ -173,12 +174,16 @@ const Company = () => {
   const [result, setResult] = useState()
   const [isLoading, setIsLoading] = useState(false);
   const [financialData, setFinancialData] = useState([1, 2]);
-
+  const cookies = useCookies();
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/user/search-histories/${companyID}`)
-      setCompanyData(res.data)
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/user/search-histories/${companyID}`, {
+        headers: {
+          "Authorization": `Bearer ${cookies.get("token")}`
+        }
+      });
+      setCompanyData(response.data)
 
       setIsLoading(false);
     } catch (err) {
