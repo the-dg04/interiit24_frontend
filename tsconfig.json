@@ -28,5 +28,8 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/history/[company]/page.tsx", "src/app/page.jsx"],
+  "rules":{
+    "no-unused-vars": "off",
+  },
   "exclude": ["node_modules"]
 }
