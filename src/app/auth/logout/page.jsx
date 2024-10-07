@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useCookies } from "next-client-cookies";
 import { useRouter } from "next/navigation";

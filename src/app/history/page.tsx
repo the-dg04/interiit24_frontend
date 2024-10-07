@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client"
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -24,7 +25,7 @@ const LoaderWrapper = styled.div`
 `;
 
 const page = () => {
-    const [companies, setCompanies] = useState([])
+    const [ , setCompanies] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const cookies = useCookies();
 

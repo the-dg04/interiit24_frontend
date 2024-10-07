@@ -22,7 +22,7 @@ export const AlertDescription = ({ children }) => (
 export const AlertTitle = ({ children }) => (
   <div className="font-bold text-base mb-2">{children}</div>
 );
-export const AlertDialog = ({ children, isOpen, onClose }) => (
+export const AlertDialog = ({ children, isOpen }) => (
   <div
   className={`fixed z-10 inset-0 overflow-y-auto ${
     isOpen ? 'block' : 'hidden'

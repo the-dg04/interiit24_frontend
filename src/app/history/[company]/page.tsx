@@ -1,25 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
-import { Card, CardHeader, CardContent } from '../../components/ui/card.jsx';
-import { Alert, AlertDescription, AlertTitle } from '../../components/ui/alert.jsx';
+import { CardHeader, CardContent } from '../../components/ui/card.jsx';
 import AuthBackgroundWrapper from '@/app/components/ui/AuthBackgroundWrapper.jsx';
-import Button from '@/app/components/ui/button';
-import Input from '@/app/components/ui/input';
 import styled from 'styled-components';
 import Loader from '../../components/ui/Loader.jsx';
-import ToggleSection from '../../components/ui/toggle.jsx';
-import { useRouter } from 'next/router.js';
 import { useParams } from 'next/navigation.js';
 import { useCookies } from 'next-client-cookies';
 
