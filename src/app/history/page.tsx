@@ -7,6 +7,7 @@ import AuthBackgroundWrapper from '../components/ui/AuthBackgroundWrapper.jsx';
 import data from "./data.jsx"
 import { IoMdHome } from "react-icons/io";
 import Link from 'next/link.js';
+import { useCookies } from 'next-client-cookies';
 import styled from 'styled-components';
 
 const LoaderWrapper = styled.div`
@@ -25,12 +26,16 @@ const LoaderWrapper = styled.div`
 const page = () => {
     const [companies, setCompanies] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-
+    const cookies = useCookies();
 
     const fetchHistory = async () => {
         try {
             setIsLoading(true)
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/user/search-history`)
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_COMPUTE_BACKEND_URL}/api/user/search-history`, {
+                headers: {
+                  "Authorization": `Bearer ${cookies.get("token")}`
+                }
+              });
             setCompanies(response.data)
             setIsLoading(false)
         } catch (err) {
